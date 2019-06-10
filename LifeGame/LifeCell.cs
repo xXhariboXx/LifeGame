@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LifeGame
 {
@@ -20,7 +18,7 @@ namespace LifeGame
             {
                 return cellState == CellState.Alive;
             }
-            set
+            private set
             {
                 cellState = value == true ? CellState.Alive : CellState.Dead;
             }
@@ -43,6 +41,16 @@ namespace LifeGame
             lifeCells = new List<List<LifeCell>>();
         }
 
+        public LifeCell(bool isAlive)
+        {
+            IsAlive = isAlive;
+            shouldDie = false;
+            shouldBorn = false;
+            x = 0;
+            y = 0;
+            lifeCells = new List<List<LifeCell>>();
+        }
+
         public LifeCell(bool isAlive, ref List<List<LifeCell>> lifeCells)
         {
             IsAlive = isAlive;
@@ -55,32 +63,9 @@ namespace LifeGame
 
         public void CalculateState()
         {
-            int neighboursAlive = 0;
+            int neighboursAlive = CalculateNeighbours();
 
-            Console.Write("x:{0};y:{1}. State:{2}", x, y, IsAlive ? "Alive" : "Dead");
-
-            for (int i = x - 1; i < x + 2; ++i)
-            {
-                if (i >= 0 && i < lifeCells.Count)
-                {
-                    for (int j = y - 1; j < y + 2; ++j)
-                    {
-                        if (j >= 0 && j < lifeCells.ElementAt(i).Count && !(x == i && y == j))
-                        {
-                            if (lifeCells.ElementAt(i).ElementAt(j).IsAlive)
-                            {
-                                ++neighboursAlive;
-                                Console.Write(" Neighbor alive. x:{0}, y{1}", i, j);
-                            }
-                        }
-                    }
-                }
-            }
-
-            Console.Write(" Total neighbours alive: {0}", neighboursAlive);
-            Console.WriteLine();
-
-            switch(cellState)
+            switch (cellState)
             {
                 case CellState.Alive:
                     if (neighboursAlive != 2 && neighboursAlive != 3)
@@ -109,6 +94,36 @@ namespace LifeGame
 
             shouldDie = false;
             shouldBorn = false;
+        }
+
+        private int CalculateNeighbours()
+        {
+            int neighboursAlive = 0;
+
+            Console.Write("x:{0};y:{1}. State:{2}", x, y, IsAlive ? "Alive" : "Dead");
+
+            for (int i = x - 1; i < x + 2; ++i)
+            {
+                if (i >= 0 && i < lifeCells.Count)
+                {
+                    for (int j = y - 1; j < y + 2; ++j)
+                    {
+                        if (j >= 0 && j < lifeCells.ElementAt(i).Count && !(x == i && y == j))
+                        {
+                            if (lifeCells.ElementAt(i).ElementAt(j).IsAlive)
+                            {
+                                ++neighboursAlive;
+                                Console.Write(" Neighbor alive. x:{0}, y{1}", i, j);
+                            }
+                        }
+                    }
+                }
+            }
+
+            Console.Write(" Total neighbours alive: {0}", neighboursAlive);
+            Console.WriteLine();
+
+            return neighboursAlive;
         }
     }
 }

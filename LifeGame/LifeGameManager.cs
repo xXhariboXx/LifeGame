@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace LifeGame
 {
@@ -56,17 +54,21 @@ namespace LifeGame
             }
         }
 
-        public void Draw()
+        public string Draw()
         {
             Console.Clear();
+            StringBuilder drawResult = new StringBuilder(); ;
 
             foreach (var column in lifeCells)
             {
                 foreach (var cell in column)
-                    Console.Write(cell.IsAlive ? "*|" : " |");
+                    drawResult.Append(cell.IsAlive ? "*|" : " |");
 
-                Console.WriteLine();
+                drawResult.AppendLine();
             }
+
+            Console.Write(drawResult.ToString());
+            return drawResult.ToString();
         }
     }
 }
